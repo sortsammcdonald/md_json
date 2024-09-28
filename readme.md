@@ -2,6 +2,14 @@
 
 Writing a programme that will extract data from blog entries and return a JSON file.
 
+# 2024.09.28
+
+Have been able to generate a dictionary containing the header materials.
+
+## Next steps
+- Convert main body text into html
+- Decide to extract licensing info before or after HTML conversion
+
 # 2024.09.24
 
 Some slight progress. The header is now being extracted and added to its own file.
