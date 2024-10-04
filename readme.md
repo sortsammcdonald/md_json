@@ -2,6 +2,10 @@
 
 Writing a programme that will extract data from blog entries and return a JSON file.
 
+# 2024.10.04
+
+The programme now generates a JSON file based on a single blog post. Next I will tidy up the code, and then see if it's possible to a main JSON file that I can adjust on an ongoing basis.
+
 # 2024.10.02
 
 Partial progress. I now have the html properly formatted and going into a dictionary. However I have not been able to extract the CC information correctly. I have to have a closer look at this.

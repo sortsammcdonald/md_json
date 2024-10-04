@@ -1,6 +1,7 @@
 import unicodedata
 import markdown
 import re
+import json
 
 class FileToProcess:
     def __init__(self, filepath):
@@ -52,15 +53,9 @@ class FileToProcess:
 
         return cleaned_html
 
-def extract_licence(text):
-    match = re.search(r'<a href="(https://creativecommons.org/licenses/.+?)"[^>]*>(CC BY[^<]*)</a>', text)
+cc_type = ['CC BY: https://creativecommons.org/licenses/by/4.0/', 'CC BY-SA: https://creativecommons.org/licenses/by-sa/4.0/', 'CC BY-NC: https://creativecommons.org/licenses/by-nc/4.0/', 'CC BY-NC-SA: https://creativecommons.org/licenses/by-nc-sa/4.0/', 'CC BY-ND: https://creativecommons.org/licenses/by-nd/4.0/', 'CC BY-NC-ND: https://creativecommons.org/licenses/by-nc-nd/4.0/', ' CC0: https://creativecommons.org/publicdomain/zero/1.0/']
 
-    if match:
-        license_link = match.group(1)
-        license_title = match.group(2)
-        print(f'<a href="{license_link}">{license_title}</a>')
-    else:
-        print("License information not found.")
+
 def main():
     text_processor = FileToProcess('test.md')
     primary_content, secondary_content = text_processor.extract_content()
@@ -75,14 +70,17 @@ def main():
 
     html_text = text_processor.gen_html(secondary_filename)  # Generate HTML from secondary content
 
-    license_text = extract_licence(html_text)
 
     prim_dict['html'] = html_text
+    prim_dict['license'] = cc_type[0]
 
     #print(html_text)
-    print(license_text)
+    print(prim_dict)
     #print(prim_dict)  # Display the dictionary to see the results
     #print(html_text)  # Display generated HTML
+
+    with open('entries.json', 'w') as file:
+        json.dump(prim_dict,file, indent=4)
 
 if __name__ == '__main__':
     main()
