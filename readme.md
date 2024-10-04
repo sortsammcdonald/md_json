@@ -10,6 +10,7 @@ The programme now generates a JSON file based on a single blog post. Next I will
 
 Partial progress. I now have the html properly formatted and going into a dictionary. However I have not been able to extract the CC information correctly. I have to have a closer look at this.
 
+
 # 2024.10.01
 
 The programme can now extract the second section. Next I should convert this to html.
