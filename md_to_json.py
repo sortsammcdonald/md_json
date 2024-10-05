@@ -2,6 +2,7 @@ import unicodedata
 import markdown
 import re
 import json
+import os
 
 class FileToProcess:
     def __init__(self, filepath):
@@ -58,10 +59,34 @@ class GenHtml:
         return cleaned_html
     
     
+class UpdateJSON:
+    def __init__(self, json_file):
+        self.json_file = json_file
+
+    def append_json(self, new_data):
+        data = []
+        if os.path.exists(self.json_file):
+            with open(self.json_file, 'r+', encoding='utf-8') as file:
+                try:
+                    data = json.load(file)
+                except json.JSONDecodeError:
+                    data = []
+                data.append(self.new_file)
+                file.seek(0)
+                file.truncate()
+                json.dump(data, file, indent=4)
+
+        else:
+            with open(self.json_file, 'w', encoding='utf-8') as file:
+                json.dump([new_data], file, indent=4)
 
 
 
 def main():
+
+    def supplement_dict(file, content_val, key_name):
+        file[key_name] = content_val
+        return file
 
     cc_type = ['CC BY: https://creativecommons.org/licenses/by/4.0/', 'CC BY-SA: https://creativecommons.org/licenses/by-sa/4.0/', 'CC BY-NC: https://creativecommons.org/licenses/by-nc/4.0/', 'CC BY-NC-SA: https://creativecommons.org/licenses/by-nc-sa/4.0/', 'CC BY-ND: https://creativecommons.org/licenses/by-nd/4.0/', 'CC BY-NC-ND: https://creativecommons.org/licenses/by-nc-nd/4.0/', ' CC0: https://creativecommons.org/publicdomain/zero/1.0/']
 
@@ -80,15 +105,24 @@ def main():
     html_processor = GenHtml(secondary_content)  # Generate HTML from secondary content
     html_text = html_processor.gen_html()
 
-    prim_dict['html'] = html_text
-    prim_dict['license'] = cc_type[0]
+
+    supplement_dict(prim_dict, html_text, 'html')
+    supplement_dict(prim_dict, cc_type[0], 'license')
+
+    #prim_dict['html'] = html_text
+    #prim_dict['license'] = cc_type[0]
     
     #print(prim_dict)
     #print(html_text)
 
 
-    with open('entries.json', 'w') as file:
-        json.dump(prim_dict,file, indent=4)
+    # with open('entries.json', 'w') as file:
+    #     json.dump(prim_dict,file, indent=4)
+
+    json_file = UpdateJSON('entries.json')
+    json_output = json_file.append_json(prim_dict)
+
+    print(json_output)
 
 if __name__ == '__main__':
     main()
