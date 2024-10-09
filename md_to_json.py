@@ -2,6 +2,7 @@ import unicodedata
 import markdown
 import re
 import json
+import os
 
 class FileToProcess:
     def __init__(self, filepath):
@@ -46,6 +47,10 @@ class GenDict:
                 key, value = line.split(':', 1)
                 self.ref_dict[key.strip()] = value.strip()
         return self.ref_dict    
+    
+    def supplement_dict(self, content_val, key_name):
+        self.ref_dict[key_name] = content_val
+        return self.ref_dict
 
 class GenHtml:
     def __init__(self, content):
@@ -58,14 +63,36 @@ class GenHtml:
         return cleaned_html
     
     
+class UpdateJSON:
+    def __init__(self, json_file):
+        self.json_file = json_file
 
+    def append_json(self, new_data):
+        try:
+            with open(self.json_file, 'r+', encoding='utf-8')as file:
+                data = json.load(file) 
 
+                data.append(new_data)
+                file.seek(0)
+                file.truncate()
+                json.dump(data, file, indent=4)
+        except FileNotFoundError:
+        # If the file doesn't exist, create it and write the data as a new list
+            with open(self.json_file, 'w', encoding='utf-8') as file:
+                json.dump([new_data], file, indent=4)
+        
+        except json.JSONDecodeError:
+        # If the file is empty or invalid, start a new list
+            with open(self.json_file, 'w', encoding='utf-8') as file:
+                json.dump([new_data], file, indent=4)
 
 def main():
 
+    
+
     cc_type = ['CC BY: https://creativecommons.org/licenses/by/4.0/', 'CC BY-SA: https://creativecommons.org/licenses/by-sa/4.0/', 'CC BY-NC: https://creativecommons.org/licenses/by-nc/4.0/', 'CC BY-NC-SA: https://creativecommons.org/licenses/by-nc-sa/4.0/', 'CC BY-ND: https://creativecommons.org/licenses/by-nd/4.0/', 'CC BY-NC-ND: https://creativecommons.org/licenses/by-nc-nd/4.0/', ' CC0: https://creativecommons.org/publicdomain/zero/1.0/']
 
-    text_processor = FileToProcess('test.md')
+    text_processor = FileToProcess('2021-05-13-PC_build.md')
     primary_content, secondary_content = text_processor.extract_content()
 
     primary_filename = 'processed_header.txt'
@@ -80,15 +107,24 @@ def main():
     html_processor = GenHtml(secondary_content)  # Generate HTML from secondary content
     html_text = html_processor.gen_html()
 
-    prim_dict['html'] = html_text
-    prim_dict['license'] = cc_type[0]
+
+    prim_dict = dict_processor.supplement_dict(html_text, 'html')
+    prim_dict = dict_processor.supplement_dict(cc_type[0], 'license')
+
+    #prim_dict['html'] = html_text
+    #prim_dict['license'] = cc_type[0]
     
     #print(prim_dict)
     #print(html_text)
 
 
-    with open('entries.json', 'w') as file:
-        json.dump(prim_dict,file, indent=4)
+    # with open('entries.json', 'w') as file:
+    #     json.dump(prim_dict,file, indent=4)
+
+    json_file = UpdateJSON('entries.json')
+    json_output = json_file.append_json(prim_dict)
+
+    print(json_output)
 
 if __name__ == '__main__':
     main()
