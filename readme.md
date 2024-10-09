@@ -2,14 +2,52 @@
 
 Writing a programme that will extract data from blog entries and return a JSON file.
 
+# 2024.10.08
+
+## 2 
+
+I've been able to adjust the programme so it updatest the JSON file now. It's not quite perfect since it doesn't check if there is any repeated content in the file. But I think this is fine to build the JSON feed
+
+## 1 
+
+Unfortunately it seems the code is not behaving as expected. While it can write a blog post to a JSON file. It cannot write a subsequent post to the file.
+
+The issue seems to be that I need to provide the programme with a UniqueKey. If I comment this section of the code out it also doesn't seem to work.
+
+## Next steps 
+- Let's see if I can generate a unique key, maybe some hashable value or even simply a string based on the content of the file.
+- Check to see how to append to a JSON file in general. If you can do that then you should be able to apply it to this programme.
+
+
+
+# 2024.10.05
+
+## 1 
+
+I have refactored the code to make it slightly tidier.
+
+The next step is create a primary JSON file that all other files can be written to.
+
+## 2 
+
+The programme essentially does everything required at this point. I still feel that the extract content function could be neater, but it's fine.
+
+## Next steps
+
+- Prep JSON file 
+- Figure out how to add it as a feature to ql-blog
+- Anonymise 
+- Write up 
+
 # 2024.10.04
 
 The programme now generates a JSON file based on a single blog post. Next I will tidy up the code, and then see if it's possible to a main JSON file that I can adjust on an ongoing basis.
 
+I am attempting to refactor the code so that it's neater and more portable. Have seperated the html and dictionary elements. Just need to merge them once again, add the licensing, and convert to JSON.
+
 # 2024.10.02
 
 Partial progress. I now have the html properly formatted and going into a dictionary. However I have not been able to extract the CC information correctly. I have to have a closer look at this.
-
 
 # 2024.10.01
 
